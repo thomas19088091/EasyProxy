@@ -81,8 +81,7 @@ if MPD_MODE == "legacy":
     SupervideoExtractor,
     UqloadExtractor,
     DroploadExtractor,
-    VixCloudExtractor,
-) = None, None, None, None, None, None, None
+) = None, None, None, None, None, None
 (
     VidmolyExtractor,
     VidozaExtractor,
@@ -265,13 +264,6 @@ try:
     logger.info("DroploadExtractor module loaded.")
 except ImportError:
     logger.warning("DroploadExtractor module not found.")
-
-try:
-    from extractors.vixcloud import VixCloudExtractor
-
-    logger.info("VixCloudExtractor module loaded.")
-except ImportError:
-    logger.warning("VixCloudExtractor module not found.")
 
 try:
     from extractors.vidmoly import VidmolyExtractor
@@ -555,7 +547,7 @@ class HLSProxy:
                     return self.extractors[key]
                 elif host == "vixcloud":
                     if key not in self.extractors:
-                        self.extractors[key] = VixCloudExtractor(
+                        self.extractors[key] = VixSrcExtractor(
                             request_headers, proxies=GLOBAL_PROXIES
                         )
                     return self.extractors[key]
@@ -727,7 +719,7 @@ class HLSProxy:
                 proxy = get_proxy_for_url("vixcloud.co", TRANSPORT_ROUTES, GLOBAL_PROXIES)
                 proxy_list = [proxy] if proxy else []
                 if key not in self.extractors:
-                    self.extractors[key] = VixCloudExtractor(
+                    self.extractors[key] = VixSrcExtractor(
                         request_headers, proxies=proxy_list
                     )
                 return self.extractors[key]
@@ -1520,7 +1512,7 @@ class HLSProxy:
                     "available_hosts": [
                         "vavoo",
                         "vixsrc",
-                        "vixcloud",
+                        "vixcloud (alias of vixsrc)",
                         "sportsonline",
                         "mixdrop",
                         "voe",
